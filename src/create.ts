@@ -122,7 +122,7 @@ export async function getChannels(guild: Guild, options: CreateOptions) {
                 children: [] // The children channels of the category
             };
             // Gets the children channels of the category and sort them by position
-            const children = category.children.sort((a, b) => a.position - b.position).toJSON();
+            const children = category.children.cache.filter((a, b) => a.position - b.position).toJSON();
             for (const child of children) {
                 // For each child channel
                 if (child.type === ChannelType.GuildText || child.type === ChannelType.GuildNews) {
@@ -139,14 +139,14 @@ export async function getChannels(guild: Guild, options: CreateOptions) {
         const others = (guild.channels.cache
             .filter((ch) => {
                 return !ch.parent && ch.type !== ChannelType.GuildCategory
-                    //&& ch.type !== 'GUILD_STORE' // there is no way to restore store channels, ignore them
+                    // && ch.type !== 'GUILD_STORE' // there is no way to restore store channels, ignore them
                     && ch.type !== ChannelType.GuildNewsThread && ch.type !== ChannelType.GuildPrivateThread && ch.type !== ChannelType.GuildPublicThread // threads will be saved with fetchTextChannelData
             }) as Collection<Snowflake, Exclude<GuildChannel, ThreadChannel>>)
             .sort((a, b) => a.position - b.position)
             .toJSON();
         for (const channel of others) {
             // For each channel
-            if (channel.type === ChnanelType.GuildText || channel.type === ChannelType.GuildNews) {
+            if (channel.type === ChannelType.GuildText || channel.type === ChannelType.GuildNews) {
                 const channelData: TextChannelData = await fetchTextChannelData(channel as TextChannel, options); // Gets the channel data
                 channels.others.push(channelData); // Update channels object
             } else {
