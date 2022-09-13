@@ -132,7 +132,7 @@ backup.create(guild, {
     maxMessagesPerChannel: 10,
     jsonSave: false,
     jsonBeautify: true,
-    doNotBackup: [ "roles",  "channels", "emojis", "bans" ],
+    doNotBackup: [ "roles", "channels", "emojis", "bans" ],
     saveImages: "base64"
 });
 ```
